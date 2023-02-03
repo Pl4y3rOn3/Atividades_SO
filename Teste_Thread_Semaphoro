@@ -1,0 +1,117 @@
+#include<pthread.h>
+#include<semaphore.h>
+#include<stdio.h>
+#include<unistd.h>
+
+void *fun1();
+void *fun2();
+void *fun3();
+void *fun4();
+void *fun5();
+
+int shared1=1; //Variavel compartilhada 1.
+int shared2=1; //Variavel compartilhada 2.
+sem_t s;
+
+int main()
+{
+  sem_init(&s,0,1);//inicializa o semaforo
+  pthread_t thread1, thread2, thread3, thread4, thread5;
+  pthread_create(&thread1, NULL, fun1, NULL);
+  pthread_create(&thread2, NULL, fun2, NULL);
+  pthread_create(&thread3, NULL, fun3, NULL);
+  pthread_create(&thread4, NULL, fun4, NULL);
+  pthread_create(&thread5, NULL, fun5, NULL);
+  pthread_join(thread1, NULL);
+  pthread_join(thread2,NULL);
+  pthread_join(thread3, NULL);
+  pthread_join(thread4,NULL);
+  pthread_join(thread5, NULL);
+  printf("Valor final compartilhado: %d e %d\n",shared1, shared2); //printa o valor final da variavel compartilhada pelas threads
+ }
+
+void *fun1()
+{
+  int x, y;
+  sem_wait(&s); //Executa a espera da operação do endereço s
+  x = shared1; //thread lê o valor da variavel compartilhada
+  y = shared2;
+  printf("Thread1 le o valor compartilhado das variaveis como: %d e %d\n",x, y);
+  x++; //thread incrementa um no valor
+  y++;
+  printf("Atualizacao local da Thread1: %d e %d\n", x, y);
+  sleep(0); //thread é interrompída por outra thread
+  shared1 = x; //thread atualiza o valor na variavel compartilhada
+  shared2 = y; 
+  printf("Valor das variaveis compartilhadas pela Thread1 e: %d e %d\n\n",shared1, shared2);
+  sem_post(&s);
+}
+
+void *fun2()
+ {
+  int a, b;
+  sem_wait(&s); //Executa a espera da operação do endereço s
+  a = shared1; //thread lê o valor da variavel compartilhada
+  b = shared2; 
+  printf("Thread2 le o valor compartilhado das variaveis como: %d e %d\n", a, b);
+  a++; //thread incrementa um no valor
+  b++;
+  printf("Atualizacao local da Thread2: %d e %d\n", a, b);
+  sleep(0); ////thread é interrompída por outra thread
+  shared1 = a; //thread atualiza o valor na variavel compartilhada
+  shared2 = b; 
+  printf("Valor das variaveis compartilhadas pela Thread2 e: %d e %d\n\n",shared1, shared2);
+  sem_post(&s);
+ }
+
+void *fun3()
+{
+  int c, d;
+  sem_wait(&s); //Executa a espera da operação do endereço s
+  c = shared1; //thread lê o valor da variavel compartilhada
+  d = shared2;
+  printf("Thread3 le o valor compartilhado das variaveis como: %d e %d\n", c, d);
+  c++; //thread incrementa um no valor
+  d++;
+  printf("Atualizacao local da Thread3: %d e %d\n", c, d);
+  sleep(0); ////thread é interrompída por outra thread
+  shared1 = c; //thread atualiza o valor na variavel compartilhada
+  shared2 = d; 
+  printf("Valor das variaveis compartilhadas pela Thread3 e: %d e %d\n\n",shared1, shared2);
+  sem_post(&s);
+}
+
+void *fun4()
+ {
+  int e, f;
+  sem_wait(&s); //Executa a espera da operação do endereço s
+  e = shared1; //thread lê o valor da variavel compartilhada
+  f = shared2;
+  printf("Thread4 le o valor compartilhado das variaveis como: %d e %d\n", e, f);
+  e++; //thread incrementa um no valor
+  f++;
+  printf("Atualizacao local da Thread4: %d e %d\n", e, f);
+  sleep(0); ////thread é interrompída por outra thread
+  shared1 = e; //thread atualiza o valor na variavel compartilhada
+  shared2 = f; 
+  printf("Valor das variaveis compartilhadas pela Thread4 e: %d e %d\n\n",shared1, shared2);
+  sem_post(&s);
+ }
+
+
+void *fun5()
+ {
+  int g, h;
+  sem_wait(&s); //Executa a espera da operação do endereço s
+  g = shared1; //thread lê o valor da variavel compartilhada
+  h = shared2;
+  printf("Thread5 le o valor compartilhado das variaveis como: %d e %d\n", g, h);
+  g++; //thread incrementa um no valor
+  h++;
+  printf("Atualizacao local da Thread5: %d e %d\n", g, h);
+  sleep(0); ////thread é interrompída por outra thread
+  shared1 = g; //thread atualiza o valor na variavel compartilhada
+  shared2 = h; 
+  printf("Valor das variaveis compartilhadas pela Thread5 e: %d e %d\n\n",shared1, shared2);
+  sem_post(&s);
+ }
